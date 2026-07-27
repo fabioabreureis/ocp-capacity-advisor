@@ -1,0 +1,23 @@
+# permissions for end users to view capacityadvisors.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: ocp-capacity-advisor
+    app.kubernetes.io/managed-by: kustomize
+  name: capacityadvisor-viewer-role
+rules:
+- apiGroups:
+  - advisor.openshift.io
+  resources:
+  - capacityadvisors
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - advisor.openshift.io
+  resources:
+  - capacityadvisors/status
+  verbs:
+  - get

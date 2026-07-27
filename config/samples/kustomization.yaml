@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- advisor_v1alpha1_capacityadvisor.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples

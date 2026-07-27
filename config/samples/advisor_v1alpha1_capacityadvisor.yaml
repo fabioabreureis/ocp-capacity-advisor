@@ -1,0 +1,12 @@
+apiVersion: advisor.openshift.io/v1alpha1
+kind: CapacityAdvisor
+metadata:
+  labels:
+    app.kubernetes.io/name: ocp-capacity-advisor
+    app.kubernetes.io/managed-by: kustomize
+  name: cluster
+spec:
+  # Target Utilization (sliders do mockup Overview)
+  cpuTargetPercent: 70
+  memoryTargetPercent: 70
+  podsTargetPercent: 80

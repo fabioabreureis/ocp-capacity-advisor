@@ -1,0 +1,27 @@
+# permissions for end users to edit capacityadvisors.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: ocp-capacity-advisor
+    app.kubernetes.io/managed-by: kustomize
+  name: capacityadvisor-editor-role
+rules:
+- apiGroups:
+  - advisor.openshift.io
+  resources:
+  - capacityadvisors
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - advisor.openshift.io
+  resources:
+  - capacityadvisors/status
+  verbs:
+  - get

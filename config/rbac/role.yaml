@@ -1,0 +1,49 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - advisor.openshift.io
+  resources:
+  - capacityadvisors
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - advisor.openshift.io
+  resources:
+  - capacityadvisors/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - advisor.openshift.io
+  resources:
+  - capacityadvisors/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - machineconfiguration.openshift.io
+  resources:
+  - machineconfigpools
+  verbs:
+  - get
+  - list
+  - watch
