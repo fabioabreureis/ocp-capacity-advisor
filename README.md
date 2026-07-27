@@ -41,30 +41,64 @@ go test ./internal/advisor/
 make build
 ```
 
-## Deploy rápido
+## Instalação em produção
+
+Pré-requisitos: `oc`/`kubectl` logado no cluster e um registry que o cluster consiga puxar (Quay, registry interno, etc.).
 
 ```bash
-# Instala CRD + RBAC + Deployment do manager
-make deploy IMG=<sua-imagem>
+# 1) Imagem (troque pelo seu registry)
+export IMG=quay.io/<seu-user>/ocp-capacity-advisor:v0.1.0
 
-# Ou só o CRD, e rode o manager localmente contra o cluster:
-make install
-make run
-```
+# 2) Build + push
+make docker-build docker-push IMG=$IMG
 
-Crie o CR de exemplo:
+# 3) Deploy no cluster (namespace openshift-advisor)
+#    Instala CRD, RBAC, ServiceAccount e Deployment do manager
+make deploy IMG=$IMG
 
-```bash
+# 4) Confirme que o manager subiu
+kubectl -n openshift-advisor get pods
+
+# 5) Crie o CR com os targets de utilização
 kubectl apply -f config/samples/advisor_v1alpha1_capacityadvisor.yaml
+
+# 6) Veja o status (capacidade + recomendações)
 kubectl get capacityadvisor cluster -o yaml
 ```
 
-Olhe especialmente:
+Campos úteis no status:
 
-- `status.cluster` — cards do topo (CPU, memória, pods, nodes)
-- `status.pools` — tabela por MachineConfigPool
-- `status.recommendations` — +cores / +memória / +pods / nós estimados
+- `status.cluster` — CPU, memória, pods e nodes
+- `status.pools` — breakdown por MachineConfigPool
+- `status.recommendations` — capacidade adicional e nós estimados
 
+### Remover do cluster
+
+```bash
+kubectl delete -f config/samples/advisor_v1alpha1_capacityadvisor.yaml
+make undeploy
+make uninstall
+```
+
+### Manifesto único (opcional)
+
+Gera um YAML consolidado para aplicar com `kubectl apply -f`:
+
+```bash
+export IMG=quay.io/<seu-user>/ocp-capacity-advisor:v0.1.0
+make build-installer IMG=$IMG
+kubectl apply -f dist/install.yaml
+```
+
+## Desenvolvimento local (sem imagem)
+
+Só o CRD no cluster; o manager roda na sua máquina:
+
+```bash
+make install
+make run
+kubectl apply -f config/samples/advisor_v1alpha1_capacityadvisor.yaml
+```
 ## Targets (Spec)
 
 | Campo | Default | Significado |
